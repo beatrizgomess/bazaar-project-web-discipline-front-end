@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="mainDiv"></div>
+    <h1>Lista de Donatarios: </h1>
+    <ul>
+        <form method="put" action="indexOD.html">
+
+        </form>
+    </ul>
+</body>
+
+    <script>
+        const listEl = document.querySelector('ul');
+        
+        fetch(`http://localhost:8080/OrgaoDonatario`)
+        .then((response) => response.json())
+        .then((data) => data.forEach(od => {
+            listEl.insertAdjacentHTML('beforeend', `<h3>${od.nome}</h3> <button onclick="deletarDonatario(${od.id})" id="btn-deletar">Deletar</button> <button onclick="editarDonatario(${od.id})" id="btn-editar">Editar</button>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${od.endereco}</li>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${od.telefone}</li>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${od.horarioFuncionamento}</li>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${od.descricao}</li>`)
+                                                                                       
+        }));
+
+        
+        async function editarDonatario(id){
+            const formEditar = document.querySelector('form');
+
+            fetch(`http://localhost:8080/OrgaoDonatario`)
+            .then((response) => response.json())
+            .then((data) => data.forEach(od => {
+                if(od.id == id){
+                    alert("Que debug legal!")
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="nome-donatario" value="${od.nome}">`)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="endereco-donatario" value="${od.endereco}">`)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="telefone-donatario" value="${od.telefone}">`)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="horariofunc-donatario" value="${od.horarioFuncionamento}">`)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="descricao-donatario" value="${od.descricao}">`)
+                    formEditar.insertAdjacentHTML('beforeend', `<button onclick="realizaEdicaoDonatario()" type="submit">Alterar</button>`)
+                }                                           
+        }));
+        }
+
+        async function realizaEdicaoDonatario(od){
+            let nomeDonatario = document.getElementById('nome-donatario').value;
+            let enderecoDonatario = document.getElementById('endereco-donatario').value;
+            let telefoneDonatario = document.getElementById('telefone-donatario').value;
+            let horariofuncDonatario = document.getElementById('horariofunc-donatario').value;
+            let descricaoDonatario = document.getElementById('descricao-donatario').value;
+            alert(nomeDonatario + enderecoDonatario + telefoneDonatario + horariofuncDonatario + descricaoDonatario);
+
+            const json = {}
+            const dataForm = new FormData(document.forms[0])
+
+            for(let [name, value] of dataForm){
+                json[name] = value
+            }
+
+            await fetch(`http://localhost:8080/OrgaoDonatario`,
+            {method: "PUT",
+            body: JSON.stringify({nome: nomeDonatario, endereco: enderecoDonatario, telefone: telefoneDonatario,
+                 horarioFuncionamento: horariofuncDonatario, descricao: descricaoDonatario}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            /*body: JSON.stringify({nome: nomeDonatario, endereco: enderecoDonatario, telefone: telefoneDonatario,
+                 horarioFuncionamento: horariofuncDonatario, descricao: descricaoDonatario})
+            })*/
+            })     
+            .then(response => response.json())
+            .then(location.href=location.href) 
+        }
+
+        async function deletarDonatario(id){
+            let valorID = parseInt(id);
+            //alert(valorID)
+            await fetch(`http://localhost:8080/OrgaoDonatario/${valorID}`,
+            {method: 'DELETE'})
+            .then(response => response.json())
+            .then(location.href=location.href)         
+        }
+
+        
+    
+
+    </script>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+
+    </ul>
+
+
+    <script>
+        const listEl = document.querySelector('ul');
+
+        fetch(`http://localhost:8080/OrgaoDonatario`)
+            .then((response) => response.json())
+            .then((data) => data.forEach(od => {
+                listEl.insertAdjacentHTML('beforeend', `<h3>${od.nome}</h3> <button onclick="deletarDonatario(${od.id})" id="btn-deletar">Deletar</button> <button onclick="window.location.href = 'atualizarOD.html'" id="btn-editar">Editar</button>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${od.endereco}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${od.telefone}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${od.horarioFuncionamento}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${od.descricao}</li>`)
+                                                                                        
+        }));
+    </script>
+</body>
+</html>
