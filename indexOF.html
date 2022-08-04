@@ -11,7 +11,9 @@
     <div id="mainDiv"></div>
     <h1>Lista de Donatarios: </h1>
     <ul>
-     
+        <form method="put" action="indexOF.html">
+
+        </form>
     </ul>
     
     <script>
@@ -19,10 +21,50 @@
         fetch(`http://localhost:8080/OrgaoFiscalizador`)
         .then((response) => response.json())
         .then((data) => data.forEach(of => {
-            listEl.insertAdjacentHTML('beforeend', `<h3>${of.nome}</h3>`)
-            listEl.insertAdjacentHTML('beforeend', `<li>${of.descricao}</li>`)
-            //listEl.insertAdjacentHTML('beforeend', `<button>Delete</button>`)                                                               
+            listEl.insertAdjacentHTML('beforeend', `<h3>${of.nome}</h3> <button onclick="deletarFiscalizador(${of.id})" id="btn-deletar">Deletar</button> <button onclick="editarFiscalizador(${of.id})" id="btn-editar">Editar</button>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${of.descricao}</li>`)                                                             
         }));
+
+
+        async function editarFiscalizador(id){
+            const formEditar = document.querySelector('form');
+
+            fetch(`http://localhost:8080/OrgaoFiscalizador`)
+            .then(response => response.json())
+            .then(data => data.forEach(of => {
+                if(of.id == id){
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="input-nome-fiscalizador" value="${of.nome}"> `)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="input-descricao-fiscalizador" value="${of.descricao}"> `)
+                    formEditar.insertAdjacentHTML('beforeend', `<button onclick="realizaEdicaoFiscalizador(${of.id})" type="submit">Alterar</button>`)
+                }
+            }));
+        }
+
+
+        async function realizaEdicaoFiscalizador(id){
+            const nomeFiscalizador = document.getElementById('input-nome-fiscalizador').value
+            const descricaoFiscalizador = document.getElementById('input-descricao-fiscalizador').value
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type' : 'application/json'},
+                body:  JSON.stringify
+                ({
+                    id: id,
+                    nome: nomeFiscalizador,
+                    descricao: descricaoFiscalizador 
+                })
+            };
+
+            await fetch('http://localhost:8080/OrgaoFiscalizador', requestOptions)
+            .fetch(response => response.json()).then(location.href = location.href)
+        }
+        
+
+
+        async function deletarFiscalizador(id){
+            await fetch(`http://localhost:8080/OrgaoFiscalizador/${id}`, 
+            {method: 'DELETE'}).then(response => response.json()).then(location.href = location.href)
+        }
     </script>
 </body>
 </html>

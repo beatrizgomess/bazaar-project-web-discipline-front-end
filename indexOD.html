@@ -44,44 +44,39 @@
                     formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="telefone-donatario" value="${od.telefone}">`)
                     formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="horariofunc-donatario" value="${od.horarioFuncionamento}">`)
                     formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="descricao-donatario" value="${od.descricao}">`)
-                    formEditar.insertAdjacentHTML('beforeend', `<button onclick="realizaEdicaoDonatario()" type="submit">Alterar</button>`)
+                    formEditar.insertAdjacentHTML('beforeend', `<button onclick="realizaEdicaoDonatario(${od.id})" type="submit">Alterar</button>`)
                 }                                           
-        }));
+            }));
         }
 
-        async function realizaEdicaoDonatario(od){
-            let nomeDonatario = document.getElementById('nome-donatario').value;
-            let enderecoDonatario = document.getElementById('endereco-donatario').value;
-            let telefoneDonatario = document.getElementById('telefone-donatario').value;
-            let horariofuncDonatario = document.getElementById('horariofunc-donatario').value;
-            let descricaoDonatario = document.getElementById('descricao-donatario').value;
-            alert(nomeDonatario + enderecoDonatario + telefoneDonatario + horariofuncDonatario + descricaoDonatario);
+        async function realizaEdicaoDonatario(id){
+            const nomeDonatario = document.getElementById('nome-donatario').value;
+            const enderecoDonatario = document.getElementById('endereco-donatario').value;
+            const telefoneDonatario = document.getElementById('telefone-donatario').value;
+            const horariofuncDonatario = document.getElementById('horariofunc-donatario').value;
+            const descricaoDonatario = document.getElementById('descricao-donatario').value;
 
-            const json = {}
-            const dataForm = new FormData(document.forms[0])
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type' : 'application/json'},
+                body: JSON.stringify
+                ({  
+                    id: id,
+                    nome: nomeDonatario,
+                    endereco: enderecoDonatario,
+                    telefone: telefoneDonatario,
+                    horarioFuncionamento: horariofuncDonatario,
+                    descricao: descricaoDonatario
+                })
+            };
 
-            for(let [name, value] of dataForm){
-                json[name] = value
-            }
+            await fetch('http://localhost:8080/OrgaoDonatario', requestOptions)
+            .then(response => response.json()).then(location.href = location.href)
 
-            await fetch(`http://localhost:8080/OrgaoDonatario`,
-            {method: "PUT",
-            body: JSON.stringify({nome: nomeDonatario, endereco: enderecoDonatario, telefone: telefoneDonatario,
-                 horarioFuncionamento: horariofuncDonatario, descricao: descricaoDonatario}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-            /*body: JSON.stringify({nome: nomeDonatario, endereco: enderecoDonatario, telefone: telefoneDonatario,
-                 horarioFuncionamento: horariofuncDonatario, descricao: descricaoDonatario})
-            })*/
-            })     
-            .then(response => response.json())
-            .then(location.href=location.href) 
         }
 
         async function deletarDonatario(id){
             let valorID = parseInt(id);
-            //alert(valorID)
             await fetch(`http://localhost:8080/OrgaoDonatario/${valorID}`,
             {method: 'DELETE'})
             .then(response => response.json())
