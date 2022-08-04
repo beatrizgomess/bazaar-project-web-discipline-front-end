@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Fiscalizador</title>
+</head>
+<body>
+
+    <div id="mainDiv"></div>
+    <h1>Lista de Donatarios: </h1>
+    <ul>
+     
+    </ul>
+    
+    <script>
+        const listEl = document.querySelector('ul');
+        fetch(`http://localhost:8080/OrgaoFiscalizador`)
+        .then((response) => response.json())
+        .then((data) => data.forEach(of => {
+            listEl.insertAdjacentHTML('beforeend', `<h3>${of.nome}</h3>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${of.descricao}</li>`)
+            //listEl.insertAdjacentHTML('beforeend', `<button>Delete</button>`)                                                               
+        }));
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 
 
-document.getElementById("btnBusca").addEventListener("click", async function(){
+document.getElementById("btnbusca").addEventListener("click", async function(){
     const id = document.getElementById("id").value
     const divmain = document.getElementById("mainDiv")
 
@@ -16,11 +16,11 @@ document.getElementById("btnBusca").addEventListener("click", async function(){
             return
         }
 
-        let {nome, endereco, telefone, horario_Funcionamento, descricao} = data
+        let {nome, endereco, telefone, horarioFuncionamento, descricao} = data
         divmain.innerHTML = `<h3>${nome}</h3>
                                         Endereço: ${endereco}<br/>
-                                        Telefone: ${telefone}
-                                        Horario de Funcionamento: ${horario_Funcionamento}<br/>
+                                        Telefone: ${telefone}<br>
+                                        Horario de Funcionamento: ${horarioFuncionamento}<br/>
                                         Descrição: ${descricao}`
     })
     .catch(erro => {alert(erro)})
