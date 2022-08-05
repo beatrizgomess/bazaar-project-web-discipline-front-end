@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        Selecione o lote: <select id="lotes" name="passs" class="tipoSelect"></select></br>
+        <button id="btnBuscarLote" onclick="lerUmLote()">BUSCAR</button>
+        <div id="exibeOdEOf"></div>
+    </ul>
+
+    <script>
+
+        fetch(`http://localhost:8080/Lote`,{
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                let allLotes = data;
+                console.log(allLotes)
+                let html = '';
+                for (var i = 0; i < allLotes.length; i++){
+                    html += "<option id='loteSelect' value=" + allLotes[i].id + ">" + allLotes[i].id +" - "+ allLotes[i].observacao + "</option>"
+                }
+                document.getElementById('lotes').innerHTML = html;
+
+        })
+        
+            
+    </script>
+
+    <script>
+            const listEl = document.querySelector('ul');
+            
+            
+            document.getElementById('btnBuscarLote').addEventListener('click', () => {
+            const idLote = document.getElementById('lotes').value
+            
+            fetch(`http://localhost:8080/Lote/${idLote}`,
+            {Method: "GET"})
+            .then(response => {return response.json()})
+            .then(data => {
+                let {observacao, dataEntrega, idOrgaoDonatario, idOrgaoFiscalizador, orgaoDonatario, orgaoFiscalizador} = data
+                
+                listEl.insertAdjacentHTML('beforeend', `<h3>${observacao}</h3>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${dataEntrega}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li><h2>Órgão Donatário</h2></li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoDonatario.nome}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoDonatario.endereco}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoDonatario.telefone}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoDonatario.descricao}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoDonatario.horarioFuncionamento}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li><h2>Órgão Fiscalizador</h2></li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoFiscalizador.nome}</li>`)
+                listEl.insertAdjacentHTML('beforeend', `<li>${orgaoFiscalizador.descricao}</li>`)
+            })})
+            
+            
+    </script>
+</body>
+</html>

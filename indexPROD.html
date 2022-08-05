@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="mainDiv"></div>
+    <h1>Lista de Produtos: </h1>
+    <ul>
+        <form method="put" action="indexPROD.html">
+
+        </form>
+    </ul>
+
+    <script>
+        const listEl = document.querySelector('ul');
+        fetch(`http://localhost:8080/Produto`)
+        .then((response) => response.json())
+        .then((data) => data.forEach(prod => {
+            listEl.insertAdjacentHTML('beforeend', `<h3>${prod.nome}</h3> <button onclick="deletarProduto(${prod.codigo})" id="btn-deletar">Deletar</button> <button onclick="editarProduto(${prod.codigo})" id="btn-editar">Editar</button>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${prod.descricao}</li>`)   
+            listEl.insertAdjacentHTML('beforeend', `<li>${prod.codigo}</li>`)
+            listEl.insertAdjacentHTML('beforeend', `<li>${prod.idLote}</li>`)                                                            
+        }));
+
+        async function editarProduto(codigo){
+            const formEditar = document.querySelector('form');
+
+            fetch(`http://localhost:8080/Produto`)
+            .then(response => response.json())
+            .then(data => data.forEach(prod => {
+                if(prod.codigo == codigo){
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="input-nome-produto" value="${prod.nome}"> `)
+                    formEditar.insertAdjacentHTML('beforeend', `<input type="text" id="input-descricao-produto" value="${prod.descricao}"> `)
+                    formEditar.insertAdjacentHTML('beforeend', `<button onclick="realizaEdicaoProduto(${prod.codigo}, ${prod.idLote})" type="submit">Alterar</button>`)
+                }
+            }));
+        }
+
+        async function realizaEdicaoProduto(codigo, idLote){
+            const newNomeProduto = document.getElementById('input-nome-produto').value
+            const newDescricaoProduto = document.getElementById('input-descricao-produto').value
+            
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type' : 'application/json'},
+                body:  JSON.stringify
+                ({
+                    codigo: codigo,
+                    idLote: idLote,
+                    nome: newNomeProduto,
+                    descricao: newDescricaoProduto 
+                })
+            };
+
+            await fetch('http://localhost:8080/Produto', requestOptions)
+            .fetch(response => response.json()).then(location.href = location.href)
+        }
+
+        async function deletarProduto(codigo){
+            await fetch(`http://localhost:8080/Produto/${codigo}`,
+            {method: 'DELETE'}).then(response => response.json()).then(location.href = location.href).then(alert(codigo))
+        }
+    </script>
+</body>
+</html>

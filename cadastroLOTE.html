@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Cadastro de Lote</h1>
+    </header>
+    <main>
+        <form method="post" btnCadastro successRedirect="index.html">
+            Data de Entrega: <input id="dataEntrega" type="date" name="dataEntrega"/><br/>
+            Observação:<input id="observacao" type="text" name="observacao"/><br/>
+            Órgão Donatário: <select id="orgaoDonatarioSelect" name="selectDonatario" class="tipoSelect"></select><br/>
+            Órgão Fiscalizador: <select id="orgaoFiscalizadorSelect" name="selectFiscalizador" class="tipoSelect"></select><br/> 
+            <br>  
+        </form>
+
+        <button onclick="cadastraLote()" type="submit" id="btnCadastro">Cadastrar</button>
+    </main>
+
+    <script>
+        async function preencheSelectDonatario(){
+            fetch(`http://localhost:8080/OrgaoDonatario`,{
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                let allDonatario = data;
+                console.log(allDonatario)
+                let html = '';
+                for (var i = 0; i < allDonatario.length; i++){
+                    html += "<option id='optionSelectDonatario' value=" + allDonatario[i].id + ">" + allDonatario[i].id +" - "+ allDonatario[i].nome + "</option>"
+                }
+
+                document.getElementById('orgaoDonatarioSelect').innerHTML = html;
+
+            })
+            };
+            preencheSelectDonatario();
+
+            async function preencheSelectFiscalizador(){
+            fetch(`http://localhost:8080/OrgaoFiscalizador`,{
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                let allFiscalizador = data;
+                console.log(allFiscalizador)
+                let html = '';
+                for (var i = 0; i < allFiscalizador.length; i++){
+                    html += "<option id='optionSelectFiscalizador' value=" + allFiscalizador[i].id + ">" + allFiscalizador[i].id +" - "+ allFiscalizador[i].nome + "</option>"
+                }
+
+                document.getElementById('orgaoFiscalizadorSelect').innerHTML = html;
+
+            })
+            };
+            preencheSelectFiscalizador();
+
+            async function cadastraLote(){
+                const dataEntrega = document.getElementById('dataEntrega').value
+                const observacaoLote = document.getElementById('observacao').value
+                const idOrgaoDonatario = document.getElementById('orgaoDonatarioSelect').value
+                const idOrgaoFiscalizador = document.getElementById('orgaoFiscalizadorSelect').value
+                
+                const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                body: JSON.stringify
+                ({  
+                    dataEntrega: dataEntrega,
+                    observacao: observacaoLote,
+                    idOrgaoDonatario: idOrgaoDonatario,
+                    idOrgaoFiscalizador: idOrgaoFiscalizador
+                })
+                };
+
+                await fetch('http://localhost:8080/Lote', requestOptions)
+                .then(response => response.json()).then(location.href = location.href)
+            }
+    </script>
+</body>
+</html>
