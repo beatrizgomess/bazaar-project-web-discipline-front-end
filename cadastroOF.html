@@ -4,21 +4,78 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <title>Cadastro Fiscalizador</title>
+
+
+    <style>
+
+        .form-control{
+            width: 300px;
+        }
+
+        .form-select{
+            width: 300px;
+        }
+
+        .formStyle{
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+           
+            align-items: center;
+            padding: 20px;
+
+        }
+
+        h1{
+            text-align: center;
+            margin-top: 20px;
+        }
+        #btnCadastro{
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+            align-items: center;
+        }
+
+        #btnVoltar{
+            
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+            align-items: center;
+        }
+       
+    </style>
 </head>
 <body>
     <header>
         <h1>Cadastro de Fiscalizador</h1>
         <h2></h2>
     </header>
-    <main>
-        <form method="post" btnCadastro successRedirect="index.html">
-            Nome: <input type="text" name="nome"/><br/>
-            Descrição: <input type="text" name="descricao"/><br/>
-            <button id="btnCadastro">Cadastrar</button>
-        </form>
-    </main>
 
+    <main>
+
+        <form class="formStyle" method="post" btnCadastro successRedirect="index.html">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Nome: </label>
+                <input type="text" name="nome" class="form-control" id="pCode">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Descricao: </label>
+                <input type="text" name="descricao" class="form-control" id="pNome">
+            </div>
+        </form>
+        <button id="btnCadastro" type="submit" class="btn btn-outline-secondary">Cadastrar</button>
+        <br>
+        <a href="index.html"><button id="btnVoltar" class="btn btn-primary">VOLTAR</button></a>
+
+    </main>
     <script src="scripts/cadastroOF.js"></script>
 </body>
 </html>

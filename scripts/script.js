@@ -17,42 +17,42 @@ document.getElementById("btnbusca").addEventListener("click", async function(){
             return
         }
 
-        let {nome, endereco, telefone, horario_funcionamento, descricao} = data
-        divmain.innerHTML = `<h3>${nome}</h3>
-                                        Endereço: ${endereco}<br/>
-                                        Telefone: ${telefone}
-                                        Horario de Funcionamento: ${horario_funcionamento}<br/>
-                                        Descrição: ${descricao}`
+        let {nome, endereco, telefone, horarioFuncionamento, descricao} = data
+        divmain.innerHTML = `<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">${nome}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Endereço: ${endereco}
+            <br>
+            Descrição: ${descricao} 
+            <br>
+            Horario de Funcionamento: ${horarioFuncionamento}
+            <br>
+            Telefone para contato: ${telefone}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>`
     })
     .catch(erro => {alert(erro)})
     
 
 })
 
+
+
+
+
 //========================= BUSCAR FISCALIZADOR ========================= //  
 
-document.getElementById("btn-busca-fiscalizador").addEventListener("click", async function(){
-    const idFiscalizador = document.getElementById("input-fiscalizador").value
-    const divMainZ = document.getElementById("divMain")
-
-    fetch(`http://localhost:8080/OrgaoFiscalizador/${idFiscalizador}`, 
-    {Method: "GET"})
-    .then(response => {return response.json()})
-    .then(data => {
-        if(data.status == 400){
-            divMain.innerHTML = `Órgão Fiscalizador não encontrado!!`
-            return
-        } else if(data.status == 500){
-            divMain.innerHTML = `Problema com a requisição!!`
-            return
-        }
-
-        let {nome, descricao} = data
-        divMainZ.innerHTML = `<h3>${nome}</h3><br>
-                            Descrição: ${descricao}`
 
 
-    }).catch(erro => {alert(erro)})
-})
+//========================= BUSCAR PRODUTO ========================= //  
 
-//========================= BUSCAR FISCALIZADOR ========================= //  

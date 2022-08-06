@@ -16,11 +16,6 @@ document.getElementById("btnCadastro").addEventListener("click",
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(function(response){return response.text()})
-        .then(function(data){
-            alert(data)
-        }).catch(function(erro){
-            alert(erro)
-        })
+        }).then(function(response){return response.text()}).then(window.location.href = 'indexOF.html')
     }
 )

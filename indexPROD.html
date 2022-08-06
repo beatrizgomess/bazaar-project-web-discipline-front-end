@@ -4,14 +4,66 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <title>Lista de Produtos</title>
+
+
+    <style>
+        body{
+            background-color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            
+        }
+    
+        h1{
+            text-align: center;
+            margin-top: 50px;
+        }
+    
+        .posts-list{
+            width: 300px;
+            text-align: center;
+           margin: auto;
+           
+        
+        }
+    
+        .title{
+            text-align: center;
+        }
+    
+        .card-title:hover{
+            color: rgb(9, 125, 179);
+        }
+        
+        #btnVoltar{
+            margin-left: 10px;
+            margin-right: 20px;
+        }
+    
+        #btnbusca{
+            text-align: center;
+        
+        }
+    </style>
 </head>
 <body>
     <div id="mainDiv"></div>
-    <h1>Lista de Produtos: </h1>
+    <div class="title">
+        <h1>Lista de PRODUTO: </h1>
+      
+        <main>
+            BUSCAR PRODUTO <input type="text" id="input-produto"/>
+            <button name="btn-busca-produto" id="btn-busca-produto" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">Buscar Produto</button>   <a href="indexLOTE.html"><button id="btnVoltar" class="btn btn-secondary">LOTES</button></a> <a href="index.html"><button id="btnVoltar" class="btn btn-secondary">VOLTAR</button></a>   
+            <br/>
+            <div id="divMain"></div>
+        </main>
+        </div>
     <ul>
+        
         <form method="put" action="indexPROD.html">
-
         </form>
     </ul>
 
@@ -20,11 +72,22 @@
         fetch(`http://localhost:8080/Produto`)
         .then((response) => response.json())
         .then((data) => data.forEach(prod => {
-            listEl.insertAdjacentHTML('beforeend', `<h3>${prod.nome}</h3> <button onclick="deletarProduto(${prod.codigo})" id="btn-deletar">Deletar</button> <button onclick="editarProduto(${prod.codigo})" id="btn-editar">Editar</button>`)
-            listEl.insertAdjacentHTML('beforeend', `<li>${prod.descricao}</li>`)   
-            listEl.insertAdjacentHTML('beforeend', `<li>${prod.codigo}</li>`)
-            listEl.insertAdjacentHTML('beforeend', `<li>${prod.idLote}</li>`)                                                            
+            listEl.insertAdjacentHTML('beforeend', `<div id="itens" class="posts-list row" >
+            <div class="card mt-4 col-md-6 bg-ligt" style="width: 18rem;">
+                <div  class="card-body">
+                  <h5 class="card-title">${prod.codigo}</h5>
+                  <h5 class="card-title">${prod.nome}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><br> Descrição: ${prod.descricao}</h6>
+                  <p class="card-text">Lote: ${prod.idLote}</p>
+                  <button onclick="deletarProduto(${prod.codigo})" id="btn-deletar" class="btn btn-outline-secondary">Deletar</button>
+                  <button onclick="editarProduto(${prod.codigo})" id="btn-editar"  class="btn btn-outline-secondary">Editar</button>
+                </div>
+              </div>
+        </div>`)
+           
+        
         }));
+    
 
         async function editarProduto(codigo){
             const formEditar = document.querySelector('form');
@@ -64,6 +127,47 @@
             await fetch(`http://localhost:8080/Produto/${codigo}`,
             {method: 'DELETE'}).then(response => response.json()).then(location.href = location.href).then(alert(codigo))
         }
+
+
+        //========================= BUSCAR PRODUTO ========================= //  
+
+
+
+document.getElementById("btn-busca-produto").addEventListener("click", async function(){
+  const idProduto = document.getElementById("input-produto").value
+  const divMainZ = document.getElementById("divMain")
+
+  fetch(`http://localhost:8080/Produto/${idProduto}`, 
+  {Method: "GET"})
+  .then(response => {return response.json()})
+  .then(data => {
+      if(data.status == 400){
+          divMain.innerHTML = `Produto não encontrado!!`
+          return
+      } else if(data.status == 500){
+          divMain.innerHTML = `Problema com a requisição!!`
+          return
+      }
+
+      let {nome, descricao, codigo, idLote, id_lote} = data
+      divMainZ.innerHTML = `<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"> ${codigo} - ${nome}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">${descricao} - Lote: ${id_lote.id}</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>`
+
+
+  }).catch(erro => {alert(erro)})
+})
     </script>
 </body>
 </html>
